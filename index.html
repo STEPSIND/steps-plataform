@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>STEPS — Lo que necesitás en una sola plataforma</title>
+  <meta name="description" content="Proveedor B2B de EPP, indumentaria y equipamiento industrial para Oil & Gas, construcción y energía. Neuquén y Río Negro, Argentina." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
@@ -11,89 +12,24 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
       --bg: #0D0D0D; --gold: #E8A020; --gold-dim: #7A540E;
-      --white: #F0EFED; --muted: #888780; --border: #222220;
-      --surface: #141414;
+      --white: #F0EFED; --muted: #888780; --border: #222220; --surface: #141414;
       --green: #4CAF6A; --blue: #5B9CF6;
       --font-display: 'Bebas Neue', sans-serif;
       --font-body: 'Inter', sans-serif;
     }
-    html, body { width: 100%; overflow-x: hidden; background: #000; color: var(--white); font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
-
-    /* ═══════════════════════════════════════════
-       INTRO CANVAS — cubre toda la pantalla
-    ═══════════════════════════════════════════ */
-    #intro-stage {
-      position: fixed; inset: 0; z-index: 9999;
-      background: #000;
-      display: flex; align-items: center; justify-content: center;
-      overflow: hidden;
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg); color: var(--white);
+      font-family: var(--font-body); font-weight: 300;
+      line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: hidden;
     }
 
-    #intro-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
-
-    /* Skip button */
-    #skip-btn {
-      position: absolute; bottom: 2rem; right: 2rem;
-      font-family: var(--font-body); font-size: .7rem;
-      letter-spacing: .14em; text-transform: uppercase;
-      color: rgba(255,255,255,.35); border: 1px solid rgba(255,255,255,.12);
-      background: transparent; padding: .5rem 1.2rem; border-radius: 2px;
-      cursor: pointer; transition: color .2s, border-color .2s; z-index: 10;
+    /* ── CANVAS 3D FONDO ── */
+    #bg-canvas {
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0; pointer-events: none;
     }
-    #skip-btn:hover { color: rgba(255,255,255,.7); border-color: rgba(255,255,255,.3); }
-
-    /* STEPS logo overlay durante intro */
-    #intro-logo {
-      position: absolute; z-index: 5;
-      font-family: var(--font-display);
-      font-size: clamp(4rem, 12vw, 9rem);
-      letter-spacing: .08em;
-      color: #fff;
-      opacity: 0;
-      text-shadow: 0 0 60px rgba(232,160,32,.6), 0 0 120px rgba(232,160,32,.2);
-      pointer-events: none;
-      transform: scale(.92);
-      transition: opacity .8s ease, transform .8s ease, text-shadow .8s ease;
-    }
-    #intro-logo.visible {
-      opacity: 1; transform: scale(1);
-    }
-
-    /* Progress line */
-    #intro-progress {
-      position: absolute; bottom: 0; left: 0;
-      height: 1px; width: 0; background: var(--gold);
-      box-shadow: 0 0 8px var(--gold);
-      transition: width linear;
-      z-index: 10;
-    }
-
-    /* Sector labels que aparecen en la red neuronal */
-    .sector-label {
-      position: absolute;
-      font-family: var(--font-body); font-size: .65rem;
-      font-weight: 500; letter-spacing: .12em; text-transform: uppercase;
-      color: rgba(255,255,255,0); pointer-events: none;
-      transition: color .6s ease;
-      white-space: nowrap;
-    }
-    .sector-label.lit { color: rgba(255,255,255,.7); }
-
-    /* Black hole overlay */
-    #blackhole-overlay {
-      position: absolute; inset: 0; z-index: 8;
-      background: radial-gradient(circle at 50% 50%, #000 0%, transparent 70%);
-      opacity: 0; pointer-events: none;
-    }
-
-    /* ═══════════════════════════════════════════
-       MAIN SITE (oculto hasta que termina intro)
-    ═══════════════════════════════════════════ */
-    #site {
-      opacity: 0;
-      transition: opacity 1.2s ease;
-    }
-    #site.visible { opacity: 1; }
 
     /* ── NAVBAR ── */
     nav {
@@ -109,83 +45,111 @@
     }
     .nav-logo {
       font-family: var(--font-display); font-size: 1.6rem; letter-spacing: .12em;
-      color: var(--white); text-decoration: none; display: flex; align-items: center; gap: .5rem;
+      color: var(--white); text-decoration: none;
+      display: flex; align-items: center; gap: .5rem;
     }
-    .nav-logo span { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--gold); margin-bottom: 2px; }
+    .nav-logo-dot {
+      display: inline-block; width: 6px; height: 6px;
+      border-radius: 50%; background: var(--gold); margin-bottom: 2px;
+    }
     .nav-links { display: flex; align-items: center; gap: 2.5rem; list-style: none; }
-    .nav-links a { font-size: .78rem; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color .2s; }
+    .nav-links a {
+      font-size: .78rem; font-weight: 500; letter-spacing: .08em;
+      text-transform: uppercase; color: var(--muted); text-decoration: none;
+      transition: color .2s;
+    }
     .nav-links a:hover { color: var(--white); }
-    .nav-cta { color: var(--gold) !important; border: 1px solid var(--gold-dim); padding: .45rem 1.2rem; border-radius: 2px; transition: background .2s, color .2s !important; }
+    .nav-cta {
+      color: var(--gold) !important; border: 1px solid var(--gold-dim);
+      padding: .45rem 1.2rem; border-radius: 2px;
+      transition: background .2s, color .2s !important;
+    }
     .nav-cta:hover { background: var(--gold); color: var(--bg) !important; }
 
     /* ── HERO ── */
     #hero {
+      position: relative; z-index: 1;
       min-height: 100svh; display: flex; flex-direction: column;
       justify-content: center; padding: 0 3rem; padding-top: 5rem;
-      position: relative; overflow: hidden; background: var(--bg);
-    }
-    #hero::before {
-      content: ''; position: absolute; inset: 0;
-      background: radial-gradient(circle at 75% 50%, rgba(232,160,32,.04) 0%, transparent 55%);
-      pointer-events: none;
+      overflow: hidden;
     }
     .weld-line {
       position: absolute; top: 0; left: 0; height: 2px; width: 0;
-      background: var(--gold); box-shadow: 0 0 12px var(--gold);
-      animation: weld 1.4s cubic-bezier(.22,1,.36,1) .3s forwards;
+      background: var(--gold); box-shadow: 0 0 16px var(--gold);
+      animation: weld 1.6s cubic-bezier(.22,1,.36,1) .5s forwards;
     }
     @keyframes weld { to { width: 100%; } }
 
-    .hero-inner { max-width: 900px; }
+    .hero-inner {
+      max-width: 860px;
+      opacity: 0; transform: translateY(20px);
+      animation: rise 1s cubic-bezier(.22,1,.36,1) .4s forwards;
+    }
+    @keyframes rise { to { opacity: 1; transform: none; } }
 
     h1 {
       font-family: var(--font-display);
-      font-size: clamp(3.4rem, 8vw, 7.5rem);
-      line-height: .95; letter-spacing: .01em;
-      color: var(--white); margin-bottom: 3rem; max-width: 16ch;
+      font-size: clamp(3.8rem, 9vw, 8.5rem);
+      line-height: .93; letter-spacing: .01em;
+      color: var(--white); margin-bottom: 2.5rem; max-width: 14ch;
     }
 
     .hero-actions { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
-
     .btn-primary {
       display: inline-block; background: var(--gold); color: var(--bg);
-      font-size: .82rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
-      text-decoration: none; padding: .85rem 2.2rem; border-radius: 2px;
-      border: 1px solid var(--gold); transition: background .2s, transform .15s;
+      font-size: .82rem; font-weight: 600; letter-spacing: .06em;
+      text-transform: uppercase; text-decoration: none;
+      padding: .85rem 2.2rem; border-radius: 2px; border: 1px solid var(--gold);
+      transition: background .2s, transform .15s;
     }
     .btn-primary:hover { background: #f0aa28; transform: translateY(-1px); }
-
     .btn-ghost {
       display: inline-block; background: transparent; color: var(--white);
-      font-size: .82rem; font-weight: 500; letter-spacing: .06em; text-transform: uppercase;
-      text-decoration: none; padding: .85rem 2.2rem; border-radius: 2px;
-      border: 1px solid var(--border); transition: border-color .2s;
+      font-size: .82rem; font-weight: 500; letter-spacing: .06em;
+      text-transform: uppercase; text-decoration: none;
+      padding: .85rem 2.2rem; border-radius: 2px; border: 1px solid var(--border);
+      transition: border-color .2s;
     }
     .btn-ghost:hover { border-color: var(--muted); }
 
+    /* Stats */
     .hero-stats {
       position: absolute; bottom: 3rem; left: 3rem; right: 3rem;
       display: flex; gap: 3rem;
       border-top: 1px solid var(--border); padding-top: 1.5rem;
+      opacity: 0; animation: rise .8s ease .9s forwards;
     }
-    .stat-value { font-family: var(--font-display); font-size: 2rem; letter-spacing: .04em; line-height: 1; }
+    .stat-value {
+      font-family: var(--font-display); font-size: 2rem;
+      letter-spacing: .04em; line-height: 1;
+    }
     .stat-value em { font-style: normal; color: var(--gold); }
     .stat-label { font-size: .72rem; letter-spacing: .08em; color: var(--muted); margin-top: .25rem; text-transform: uppercase; }
 
+    /* Scroll cue */
     .scroll-cue {
       position: absolute; bottom: 3rem; right: 3rem;
       display: flex; flex-direction: column; align-items: center; gap: .4rem;
+      opacity: 0; animation: rise .7s ease 1.4s forwards;
     }
     .scroll-cue span { font-size: .65rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); writing-mode: vertical-rl; }
-    .scroll-cue-line { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--gold), transparent); animation: pulse-line 2s ease-in-out infinite; }
-    @keyframes pulse-line { 0%,100%{opacity:.4} 50%{opacity:1} }
+    .scroll-cue-line { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--gold), transparent); animation: pulse-line 2.2s ease-in-out 1.6s infinite; }
+    @keyframes pulse-line { 0%,100%{opacity:.35} 50%{opacity:1} }
 
     /* ── DIVISIONES ── */
-    #divisiones { padding: 8rem 3rem; border-top: 1px solid var(--border); background: var(--bg); }
+    #divisiones {
+      position: relative; z-index: 1;
+      padding: 8rem 3rem; border-top: 1px solid var(--border);
+      background: linear-gradient(to bottom, transparent, var(--bg) 15%);
+    }
     .section-label { font-size: .7rem; letter-spacing: .2em; text-transform: uppercase; color: var(--gold); margin-bottom: 3rem; }
     .divisions-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
-    .division-card { background: var(--bg); padding: 2.5rem 2rem; transition: background .25s; }
-    .division-card:hover { background: var(--surface); }
+    .division-card {
+      background: rgba(13,13,13,.85); padding: 2.5rem 2rem;
+      transition: background .3s; cursor: default;
+      backdrop-filter: blur(4px);
+    }
+    .division-card:hover { background: rgba(20,20,20,.95); }
     .division-number { font-family: var(--font-display); font-size: 4rem; color: var(--border); line-height: 1; margin-bottom: 1.5rem; }
     .division-tag { font-size: .68rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; margin-bottom: .75rem; }
     .division-tag.gold { color: var(--gold); }
@@ -194,527 +158,315 @@
     .division-name { font-family: var(--font-display); font-size: 1.6rem; letter-spacing: .04em; color: var(--white); margin-bottom: .75rem; }
     .division-desc { font-size: .85rem; font-weight: 300; color: var(--muted); line-height: 1.65; max-width: 28ch; }
 
+    /* ── SECTORES ── */
+    #sectores {
+      position: relative; z-index: 1;
+      padding: 8rem 3rem; background: var(--bg);
+      border-top: 1px solid var(--border);
+    }
+    .sectors-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+      background: var(--border); border: 1px solid var(--border); margin-top: 3rem;
+    }
+    .sector-card {
+      background: var(--bg); padding: 2rem 1.5rem;
+      transition: background .25s;
+      display: flex; flex-direction: column; gap: .75rem;
+    }
+    .sector-card:hover { background: var(--surface); }
+    .sector-icon { font-size: 1.5rem; line-height: 1; }
+    .sector-name { font-family: var(--font-display); font-size: 1.2rem; letter-spacing: .04em; color: var(--white); }
+    .sector-desc { font-size: .78rem; color: var(--muted); font-weight: 300; line-height: 1.55; }
+
+    /* ── RESPONSIVE ── */
     @media (max-width: 768px) {
       nav { padding: 1rem 1.5rem; }
       .nav-links { display: none; }
       #hero { padding: 0 1.5rem; padding-top: 5rem; }
       .hero-stats { left: 1.5rem; right: 1.5rem; gap: 1.5rem; bottom: 5rem; flex-wrap: wrap; }
       .scroll-cue { display: none; }
-      #divisiones { padding: 5rem 1.5rem; }
-      .divisions-grid { grid-template-columns: 1fr; }
+      #divisiones, #sectores { padding: 5rem 1.5rem; }
+      .divisions-grid, .sectors-grid { grid-template-columns: 1fr; }
     }
-
     @media (prefers-reduced-motion: reduce) {
       .weld-line { animation: none; width: 100%; }
-      #intro-stage { display: none; }
-      #site { opacity: 1; }
+      .hero-inner, .hero-stats, .scroll-cue { animation: none; opacity: 1; transform: none; }
     }
   </style>
 </head>
 <body>
 
-<!-- ══════════════════════════════════════════════════════
-     INTRO STAGE
-══════════════════════════════════════════════════════ -->
-<div id="intro-stage">
-  <canvas id="intro-canvas"></canvas>
-  <div id="blackhole-overlay"></div>
-  <div id="intro-logo">STEPS</div>
-  <div id="intro-progress"></div>
-  <button id="skip-btn">Saltar intro</button>
-</div>
+<!-- Canvas 3D fijo en el fondo -->
+<canvas id="bg-canvas"></canvas>
 
-<!-- ══════════════════════════════════════════════════════
-     SITE
-══════════════════════════════════════════════════════ -->
-<div id="site">
-  <nav id="navbar">
-    <a href="/" class="nav-logo">STEPS <span></span></a>
-    <ul class="nav-links">
-      <li><a href="#divisiones">Divisiones</a></li>
-      <li><a href="#catalogo">Catálogo</a></li>
-      <li><a href="#niveles">Niveles</a></li>
-      <li><a href="#acceso" class="nav-cta">Solicitar acceso</a></li>
-    </ul>
-  </nav>
+<!-- NAVBAR -->
+<nav id="navbar">
+  <a href="/" class="nav-logo">STEPS <span class="nav-logo-dot"></span></a>
+  <ul class="nav-links">
+    <li><a href="#divisiones">Divisiones</a></li>
+    <li><a href="#sectores">Sectores</a></li>
+    <li><a href="#catalogo">Catálogo</a></li>
+    <li><a href="#acceso" class="nav-cta">Solicitar acceso</a></li>
+  </ul>
+</nav>
 
-  <section id="hero">
-    <div class="weld-line"></div>
-    <div class="hero-inner">
-      <h1>Lo que necesitás en una sola plataforma.</h1>
-      <div class="hero-actions">
-        <a href="#catalogo" class="btn-primary">Ver catálogo</a>
-        <a href="#acceso" class="btn-ghost">Solicitar acceso</a>
-      </div>
+<!-- HERO -->
+<section id="hero">
+  <div class="weld-line"></div>
+  <div class="hero-inner">
+    <h1>Lo que necesitás en una sola plataforma.</h1>
+    <div class="hero-actions">
+      <a href="#catalogo" class="btn-primary">Ver catálogo</a>
+      <a href="#acceso" class="btn-ghost">Solicitar acceso</a>
     </div>
-    <div class="hero-stats">
-      <div class="stat-item">
-        <div class="stat-value">+<em>10</em></div>
-        <div class="stat-label">Categorías</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-value"><em>3</em></div>
-        <div class="stat-label">Niveles de cliente</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-value"><em>72</em>hs</div>
-        <div class="stat-label">Validez de propuesta</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-value">Oil<em>&</em>Gas</div>
-        <div class="stat-label">Sector principal</div>
-      </div>
+  </div>
+  <div class="hero-stats">
+    <div class="stat-item">
+      <div class="stat-value">+<em>10</em></div>
+      <div class="stat-label">Categorías</div>
     </div>
-    <div class="scroll-cue">
-      <span>Scroll</span>
-      <div class="scroll-cue-line"></div>
+    <div class="stat-item">
+      <div class="stat-value"><em>3</em></div>
+      <div class="stat-label">Niveles de cliente</div>
     </div>
-  </section>
+    <div class="stat-item">
+      <div class="stat-value"><em>72</em>hs</div>
+      <div class="stat-label">Validez de propuesta</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">Oil<em>&</em>Gas</div>
+      <div class="stat-label">Sector principal</div>
+    </div>
+  </div>
+  <div class="scroll-cue">
+    <span>Scroll</span>
+    <div class="scroll-cue-line"></div>
+  </div>
+</section>
 
-  <section id="divisiones">
-    <p class="section-label">El ecosistema STEPS</p>
-    <div class="divisions-grid">
-      <div class="division-card">
-        <div class="division-number">01</div>
-        <div class="division-tag gold">Abastecimiento</div>
-        <div class="division-name">STEPS Supply</div>
-        <p class="division-desc">EPP, indumentaria ignífuga, calzado, señalización y equipamiento para operaciones industriales.</p>
-      </div>
-      <div class="division-card">
-        <div class="division-number">02</div>
-        <div class="division-tag green">Espacios & Diseño</div>
-        <div class="division-name">STEPS Build</div>
-        <p class="division-desc">Construcción, espacios de trabajo, diseño y soluciones de infraestructura para industria y comercio.</p>
-      </div>
-      <div class="division-card">
-        <div class="division-number">03</div>
-        <div class="division-tag blue">Tech & Labs</div>
-        <div class="division-name">STEPS Tech</div>
-        <p class="division-desc">Ecosistemas digitales, plataformas de gestión, automatización y tecnología para el negocio industrial.</p>
-      </div>
+<!-- DIVISIONES -->
+<section id="divisiones">
+  <p class="section-label">El ecosistema STEPS</p>
+  <div class="divisions-grid">
+    <div class="division-card">
+      <div class="division-number">01</div>
+      <div class="division-tag gold">Abastecimiento</div>
+      <div class="division-name">STEPS Supply</div>
+      <p class="division-desc">EPP, indumentaria ignífuga, calzado, señalización y equipamiento para operaciones industriales.</p>
     </div>
-  </section>
-</div>
+    <div class="division-card">
+      <div class="division-number">02</div>
+      <div class="division-tag green">Espacios & Diseño</div>
+      <div class="division-name">STEPS Build</div>
+      <p class="division-desc">Construcción, espacios de trabajo, diseño y soluciones de infraestructura para industria y comercio.</p>
+    </div>
+    <div class="division-card">
+      <div class="division-number">03</div>
+      <div class="division-tag blue">Tech & Labs</div>
+      <div class="division-name">STEPS Tech</div>
+      <p class="division-desc">Ecosistemas digitales, plataformas de gestión, automatización y tecnología para el negocio industrial.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SECTORES -->
+<section id="sectores">
+  <p class="section-label">Sectores que equipamos</p>
+  <div class="sectors-grid">
+    <div class="sector-card">
+      <div class="sector-icon">⛽</div>
+      <div class="sector-name">Oil & Gas</div>
+      <p class="sector-desc">Vaca Muerta, VMOS, operaciones de campo y planta.</p>
+    </div>
+    <div class="sector-card">
+      <div class="sector-icon">🏗️</div>
+      <div class="sector-name">Construcción</div>
+      <p class="sector-desc">Obras civiles, viales e infraestructura industrial.</p>
+    </div>
+    <div class="sector-card">
+      <div class="sector-icon">⚡</div>
+      <div class="sector-name">Energía</div>
+      <p class="sector-desc">Renovables, eléctrica y mantenimiento de plantas.</p>
+    </div>
+    <div class="sector-card">
+      <div class="sector-icon">🚛</div>
+      <div class="sector-name">Transporte</div>
+      <p class="sector-desc">Logística, flota y operaciones de campo remoto.</p>
+    </div>
+  </div>
+</section>
+
+<!-- THREE.JS desde CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
 <script>
 // ════════════════════════════════════════════════════════
-//  INTRO ENGINE
+//  FONDO 3D — Three.js — partículas + conexiones + mouse
 // ════════════════════════════════════════════════════════
 (function () {
-  const canvas = document.getElementById('intro-canvas');
-  const ctx = canvas.getContext('2d');
-  const stage = document.getElementById('intro-stage');
-  const logoEl = document.getElementById('intro-logo');
-  const progressEl = document.getElementById('intro-progress');
-  const bhOverlay = document.getElementById('blackhole-overlay');
-  const site = document.getElementById('site');
-  const skipBtn = document.getElementById('skip-btn');
+  const canvas = document.getElementById('bg-canvas');
 
-  let W, H, cx, cy;
-  let raf;
-  let t = 0;           // time in seconds
-  let phase = 0;       // 0=space 1=neural 2=pulse 3=logo 4=blackhole 5=reverse 6=done
+  // Scene
+  const scene    = new THREE.Scene();
+  const camera   = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.1, 2000);
+  camera.position.z = 400;
 
-  // ── Resize ──
-  function resize() {
-    W = canvas.width  = window.innerWidth;
-    H = canvas.height = window.innerHeight;
-    cx = W / 2; cy = H / 2;
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.8));
+  renderer.setSize(innerWidth, innerHeight);
+  renderer.setClearColor(0x0D0D0D, 1);
+
+  // ── Partículas de fondo (estrellas) ──
+  const starCount = 1800;
+  const starGeo   = new THREE.BufferGeometry();
+  const starPos   = new Float32Array(starCount * 3);
+  const starSizes = new Float32Array(starCount);
+
+  for (let i = 0; i < starCount; i++) {
+    starPos[i*3]   = (Math.random() - .5) * 1400;
+    starPos[i*3+1] = (Math.random() - .5) * 900;
+    starPos[i*3+2] = (Math.random() - .5) * 600 - 100;
+    starSizes[i]   = Math.random() * 1.8 + .4;
   }
-  resize();
-  window.addEventListener('resize', resize);
+  starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+  starGeo.setAttribute('size',     new THREE.BufferAttribute(starSizes, 1));
 
-  // ── Stars ──
-  const STARS = [];
-  for (let i = 0; i < 600; i++) {
-    STARS.push({
-      x: Math.random(),
-      y: Math.random(),
-      r: Math.random() * 1.4 + .2,
-      b: Math.random(),          // base brightness
-      twinkle: Math.random() * 4 + 1
-    });
-  }
-
-  // ── Nebula colors (painted once, reused) ──
-  const NEBULA = [
-    { x: .3, y: .35, r: .38, c: 'rgba(30,15,60,.55)' },
-    { x: .7, y: .6,  r: .32, c: 'rgba(10,25,55,.5)'  },
-    { x: .5, y: .2,  r: .25, c: 'rgba(50,10,30,.4)'  },
-  ];
-
-  // ── Sectors (nodes in neural net) ──
-  const SECTORS = [
-    { label: 'Oil & Gas',        nx: .18, ny: .28 },
-    { label: 'Construcción',     nx: .78, ny: .22 },
-    { label: 'Energía',          nx: .85, ny: .62 },
-    { label: 'Minería',          nx: .22, ny: .72 },
-    { label: 'Transporte',       nx: .55, ny: .80 },
-    { label: 'Industria',        nx: .12, ny: .52 },
-    { label: 'Infraestructura',  nx: .65, ny: .18 },
-  ];
-
-  // ── Neural connections (pairs) ──
-  const EDGES = [
-    [0,1],[0,2],[0,3],[1,2],[1,6],[2,4],[3,4],[3,5],[4,5],[5,0],[6,2],[6,1],[4,1]
-  ];
-
-  // ── Sector DOM labels ──
-  const labelEls = [];
-  SECTORS.forEach((s, i) => {
-    const el = document.createElement('div');
-    el.className = 'sector-label';
-    el.textContent = s.label;
-    el.style.left = (s.nx * 100) + '%';
-    el.style.top  = (s.ny * 100) + '%';
-    el.style.transform = 'translate(-50%, -50%)';
-    stage.appendChild(el);
-    labelEls.push(el);
-    s.el = el;
+  const starMat = new THREE.PointsMaterial({
+    color: 0xffffff, sizeAttenuation: true,
+    size: 1.2, transparent: true, opacity: .55
   });
+  scene.add(new THREE.Points(starGeo, starMat));
 
-  // ── Light pulse state ──
-  let pulseProgress = 0; // 0→1 along path to center
-  let pulseOpacity = 0;
+  // ── Partículas doradas interactivas (red neuronal) ──
+  const nodeCount = 120;
+  const nodeGeo   = new THREE.BufferGeometry();
+  const nodePos   = new Float32Array(nodeCount * 3);
+  const nodeVel   = [];
 
-  // ── Black hole state ──
-  let bhProgress = 0;  // 0→1
-  let bhRadius = 0;
-  let reverseProgress = 0;
-  let earthAlpha = 0;
-
-  // Total intro ~16s: space(3) neural(4) pulse(2) logo(2) bh-in(2) black(2) bh-out(1)
-  const T = {
-    spaceEnd:    3,
-    neuralEnd:   7,
-    pulseEnd:    9,
-    logoEnd:     11,
-    bhInEnd:     13,
-    blackEnd:    15,
-    reverseEnd:  16.5,
-  };
-
-  function easeInOut(x) { return x < .5 ? 2*x*x : 1 - Math.pow(-2*x+2,2)/2; }
-  function clamp(v,a,b) { return Math.max(a, Math.min(b, v)); }
-  function lerp(a,b,t) { return a + (b-a)*t; }
-
-  function drawStars(alpha) {
-    STARS.forEach(s => {
-      const twinkle = .6 + .4 * Math.sin(t * s.twinkle + s.x * 10);
-      const bright = s.b * twinkle * alpha;
-      ctx.beginPath();
-      ctx.arc(s.x * W, s.y * H, s.r, 0, Math.PI*2);
-      ctx.fillStyle = `rgba(255,255,255,${bright})`;
-      ctx.fill();
+  for (let i = 0; i < nodeCount; i++) {
+    nodePos[i*3]   = (Math.random() - .5) * 900;
+    nodePos[i*3+1] = (Math.random() - .5) * 600;
+    nodePos[i*3+2] = (Math.random() - .5) * 200;
+    nodeVel.push({
+      x: (Math.random() - .5) * .18,
+      y: (Math.random() - .5) * .12,
+      z: (Math.random() - .5) * .06
     });
   }
+  nodeGeo.setAttribute('position', new THREE.BufferAttribute(nodePos, 3));
 
-  function drawNebula(alpha) {
-    NEBULA.forEach(n => {
-      const grd = ctx.createRadialGradient(n.x*W, n.y*H, 0, n.x*W, n.y*H, n.r*Math.min(W,H));
-      grd.addColorStop(0, n.c.replace(')', `, ${alpha})`).replace('rgba', 'rgba').replace(/,[^,)]+\)$/, `, ${alpha})`));
-      // simpler:
-      ctx.save();
-      ctx.globalAlpha = alpha;
-      const g2 = ctx.createRadialGradient(n.x*W, n.y*H, 0, n.x*W, n.y*H, n.r*Math.min(W,H));
-      g2.addColorStop(0, n.c);
-      g2.addColorStop(1, 'rgba(0,0,0,0)');
-      ctx.fillStyle = g2;
-      ctx.fillRect(0, 0, W, H);
-      ctx.restore();
-    });
+  const nodeMat = new THREE.PointsMaterial({
+    color: 0xE8A020, size: 2.2, sizeAttenuation: true,
+    transparent: true, opacity: .7
+  });
+  const nodePoints = new THREE.Points(nodeGeo, nodeMat);
+  scene.add(nodePoints);
+
+  // ── Líneas de conexión entre nodos cercanos ──
+  const maxDist = 140;
+  let linesMesh = null;
+
+  function buildLines() {
+    if (linesMesh) { scene.remove(linesMesh); linesMesh.geometry.dispose(); }
+    const positions = [];
+    const colors    = [];
+    const pos = nodeGeo.attributes.position.array;
+
+    for (let i = 0; i < nodeCount; i++) {
+      for (let j = i+1; j < nodeCount; j++) {
+        const dx = pos[i*3]   - pos[j*3];
+        const dy = pos[i*3+1] - pos[j*3+1];
+        const dz = pos[i*3+2] - pos[j*3+2];
+        const d  = Math.sqrt(dx*dx + dy*dy + dz*dz);
+        if (d < maxDist) {
+          const alpha = 1 - d / maxDist;
+          positions.push(pos[i*3], pos[i*3+1], pos[i*3+2]);
+          positions.push(pos[j*3], pos[j*3+1], pos[j*3+2]);
+          // Gold with alpha encoded in color brightness
+          colors.push(.91*alpha, .63*alpha, .13*alpha);
+          colors.push(.91*alpha, .63*alpha, .13*alpha);
+        }
+      }
+    }
+
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(positions), 3));
+    geo.setAttribute('color',    new THREE.BufferAttribute(new Float32Array(colors), 3));
+    const mat = new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: .45 });
+    linesMesh = new THREE.LineSegments(geo, mat);
+    scene.add(linesMesh);
   }
+  buildLines();
 
-  function drawNeuralNet(alpha) {
-    const fadeIn = clamp((t - T.spaceEnd) / 1.5, 0, 1);
-    const effectiveAlpha = alpha * fadeIn;
+  // ── Mouse influence ──
+  const mouse = { x: 0, y: 0 };
+  const target = { x: 0, y: 0 };
 
-    EDGES.forEach(([a, b]) => {
-      const sa = SECTORS[a], sb = SECTORS[b];
-      const ax = sa.nx * W, ay = sa.ny * H;
-      const bx = sb.nx * W, by = sb.ny * H;
-
-      // Animated dash offset for "data flowing"
-      const speed = .4;
-      const dash = 8, gap = 16;
-      const offset = (t * speed * 60) % (dash + gap);
-
-      ctx.save();
-      ctx.globalAlpha = effectiveAlpha * .25;
-      ctx.strokeStyle = '#5B9CF6';
-      ctx.lineWidth = .7;
-      ctx.setLineDash([dash, gap]);
-      ctx.lineDashOffset = -offset;
-      ctx.beginPath();
-      ctx.moveTo(ax, ay);
-      ctx.lineTo(bx, by);
-      ctx.stroke();
-      ctx.restore();
-    });
-
-    // Nodes
-    SECTORS.forEach((s, i) => {
-      const x = s.nx * W, y = s.ny * H;
-      const pulse = .5 + .5 * Math.sin(t * 2 + i);
-      ctx.save();
-      ctx.globalAlpha = effectiveAlpha;
-      // Glow
-      const grd = ctx.createRadialGradient(x, y, 0, x, y, 18);
-      grd.addColorStop(0, 'rgba(232,160,32,.7)');
-      grd.addColorStop(1, 'rgba(232,160,32,0)');
-      ctx.fillStyle = grd;
-      ctx.beginPath();
-      ctx.arc(x, y, 18 * pulse, 0, Math.PI*2);
-      ctx.fill();
-      // Core dot
-      ctx.fillStyle = '#E8A020';
-      ctx.beginPath();
-      ctx.arc(x, y, 3, 0, Math.PI*2);
-      ctx.fill();
-      ctx.restore();
-
-      // Sector label fade-in
-      const labelAlpha = clamp((t - T.spaceEnd - i * .3) / 1, 0, 1) * alpha;
-      s.el.style.color = `rgba(255,255,255,${labelAlpha * .7})`;
-    });
-  }
-
-  function drawPulse(alpha) {
-    if (t < T.neuralEnd) return;
-    pulseProgress = clamp((t - T.neuralEnd) / (T.pulseEnd - T.neuralEnd), 0, 1);
-    const ep = easeInOut(pulseProgress);
-
-    // Light travels from each sector toward center
-    SECTORS.forEach((s, i) => {
-      const sx = s.nx * W, sy = s.ny * H;
-      const px = lerp(sx, cx, ep);
-      const py = lerp(sy, cy, ep);
-
-      ctx.save();
-      ctx.globalAlpha = alpha * (1 - ep * .5);
-      const grd = ctx.createRadialGradient(px, py, 0, px, py, 20);
-      grd.addColorStop(0, 'rgba(255,255,255,.9)');
-      grd.addColorStop(.4, 'rgba(232,160,32,.4)');
-      grd.addColorStop(1, 'rgba(0,0,0,0)');
-      ctx.fillStyle = grd;
-      ctx.beginPath();
-      ctx.arc(px, py, 20, 0, Math.PI*2);
-      ctx.fill();
-
-      // Trail
-      ctx.globalAlpha = alpha * .3 * (1 - ep);
-      ctx.strokeStyle = 'rgba(232,160,32,.4)';
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.moveTo(sx, sy);
-      ctx.lineTo(px, py);
-      ctx.stroke();
-      ctx.restore();
-    });
-
-    // Flash at center when pulse arrives
-    if (ep > .9) {
-      const flash = (ep - .9) / .1;
-      ctx.save();
-      ctx.globalAlpha = alpha * flash * .6;
-      const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, 120);
-      g.addColorStop(0, 'rgba(255,255,255,1)');
-      g.addColorStop(.3, 'rgba(232,160,32,.5)');
-      g.addColorStop(1, 'rgba(0,0,0,0)');
-      ctx.fillStyle = g;
-      ctx.fillRect(0, 0, W, H);
-      ctx.restore();
-    }
-  }
-
-  function showLogo(alpha) {
-    if (t < T.pulseEnd) { logoEl.classList.remove('visible'); return; }
-    const lp = clamp((t - T.pulseEnd) / .8, 0, 1);
-    logoEl.style.opacity = lp * alpha;
-    logoEl.style.transform = `scale(${lerp(.92, 1, easeInOut(lp))})`;
-  }
-
-  function drawBlackHole(alpha) {
-    if (t < T.logoEnd) return;
-    bhProgress = clamp((t - T.logoEnd) / (T.bhInEnd - T.logoEnd), 0, 1);
-    const ep = easeInOut(bhProgress);
-
-    // Accretion disk effect — rings
-    const maxR = Math.max(W, H) * 1.2;
-    const innerR = ep * 80;
-    const outerR = maxR;
-
-    // Gravitational lens distortion rings
-    for (let r = outerR; r > innerR; r -= outerR * .06) {
-      const ringAlpha = (1 - r / outerR) * ep * .7;
-      const hue = lerp(220, 30, (1 - r / outerR));
-      ctx.save();
-      ctx.globalAlpha = ringAlpha * alpha * .4;
-      ctx.beginPath();
-      ctx.arc(cx, cy, r, 0, Math.PI * 2);
-      ctx.strokeStyle = `hsl(${hue}, 70%, 60%)`;
-      ctx.lineWidth = outerR * .04;
-      ctx.stroke();
-      ctx.restore();
-    }
-
-    // Dark core expanding
-    const coreR = ep * Math.max(W, H) * .6;
-    ctx.save();
-    const coreGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreR);
-    coreGrad.addColorStop(0, 'rgba(0,0,0,1)');
-    coreGrad.addColorStop(.6, 'rgba(0,0,0,.95)');
-    coreGrad.addColorStop(1, 'rgba(0,0,0,0)');
-    ctx.fillStyle = coreGrad;
-    ctx.beginPath();
-    ctx.arc(cx, cy, coreR, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
-
-    // Suck-in: fade logo
-    if (bhProgress > .3) {
-      const logoFade = 1 - clamp((bhProgress - .3) / .7, 0, 1);
-      logoEl.style.opacity = logoFade;
-      logoEl.style.transform = `scale(${lerp(1, .05, easeInOut(clamp((bhProgress - .3)/.7, 0, 1)))})`;
-    }
-  }
-
-  function drawReverse(alpha) {
-    if (t < T.blackEnd) return;
-    reverseProgress = clamp((t - T.blackEnd) / (T.reverseEnd - T.blackEnd), 0, 1);
-    const ep = easeInOut(reverseProgress);
-
-    // Earth below — simple horizon glow
-    const earthY = cy + lerp(H * .6, 0, ep);
-    const earthGrad = ctx.createRadialGradient(cx, earthY + H * .4, 0, cx, earthY + H * .4, H * .9);
-    earthGrad.addColorStop(0, `rgba(30,80,180,${ep * .7})`);
-    earthGrad.addColorStop(.5, `rgba(20,60,120,${ep * .4})`);
-    earthGrad.addColorStop(1, 'rgba(0,0,0,0)');
-    ctx.save();
-    ctx.globalAlpha = 1;
-    ctx.fillStyle = earthGrad;
-    ctx.fillRect(0, 0, W, H);
-    ctx.restore();
-
-    // Atmosphere rim
-    const atmGrad = ctx.createLinearGradient(0, earthY, 0, earthY + 60);
-    atmGrad.addColorStop(0, `rgba(100,180,255,${ep * .5})`);
-    atmGrad.addColorStop(1, 'rgba(0,0,0,0)');
-    ctx.save();
-    ctx.globalAlpha = 1;
-    ctx.fillStyle = atmGrad;
-    ctx.fillRect(0, earthY, W, 80);
-    ctx.restore();
-
-    // Zoom-out: stars rush in
-    const starScale = lerp(3, 1, ep);
-    STARS.forEach(s => {
-      const sx = cx + (s.x * W - cx) * starScale;
-      const sy = cy + (s.y * H - cy) * starScale;
-      if (sx < 0 || sx > W || sy < 0 || sy > H) return;
-      ctx.save();
-      ctx.globalAlpha = s.b * ep;
-      ctx.beginPath();
-      ctx.arc(sx, sy, s.r, 0, Math.PI * 2);
-      ctx.fillStyle = '#fff';
-      ctx.fill();
-      ctx.restore();
-    });
-  }
-
-  // ── Main draw loop ──
-  let lastTime = null;
-  function loop(ts) {
-    if (!lastTime) lastTime = ts;
-    const dt = (ts - lastTime) / 1000;
-    lastTime = ts;
-    t += dt;
-
-    ctx.clearRect(0, 0, W, H);
-    ctx.fillStyle = '#000';
-    ctx.fillRect(0, 0, W, H);
-
-    // Progress bar
-    const totalDur = T.reverseEnd;
-    progressEl.style.width = clamp(t / totalDur, 0, 1) * 100 + '%';
-    progressEl.style.transition = 'none';
-
-    if (t < T.blackEnd) {
-      // Stars & nebula always visible until blackout
-      const starAlpha = t < T.bhInEnd ? 1 : clamp(1 - (t - T.bhInEnd) / (T.blackEnd - T.bhInEnd), 0, 1);
-      drawNebula(starAlpha);
-      drawStars(starAlpha);
-    }
-
-    if (t >= T.spaceEnd && t < T.blackEnd) {
-      drawNeuralNet(1);
-    }
-
-    if (t >= T.neuralEnd && t < T.bhInEnd) {
-      drawPulse(1);
-    }
-
-    showLogo(1);
-
-    if (t >= T.logoEnd && t < T.blackEnd) {
-      drawBlackHole(1);
-    }
-
-    // Full black
-    if (t >= T.bhInEnd && t < T.blackEnd) {
-      const blackAlpha = clamp((t - T.bhInEnd) / .5, 0, 1);
-      ctx.save();
-      ctx.globalAlpha = blackAlpha;
-      ctx.fillStyle = '#000';
-      ctx.fillRect(0, 0, W, H);
-      ctx.restore();
-      if (blackAlpha >= 1) logoEl.style.opacity = 0;
-    }
-
-    if (t >= T.blackEnd) {
-      ctx.fillStyle = '#000';
-      ctx.fillRect(0, 0, W, H);
-      drawReverse(1);
-      // Stars come back
-      drawStars(clamp((t - T.blackEnd) / 2, 0, 1));
-    }
-
-    if (t >= T.reverseEnd) {
-      endIntro();
-      return;
-    }
-
-    // Fade sector labels out before black hole
-    if (t > T.pulseEnd) {
-      const fade = 1 - clamp((t - T.pulseEnd) / 1.5, 0, 1);
-      labelEls.forEach(el => { el.style.opacity = fade; });
-    }
-
-    raf = requestAnimationFrame(loop);
-  }
-
-  function endIntro() {
-    cancelAnimationFrame(raf);
-    stage.style.transition = 'opacity 1.2s ease';
-    stage.style.opacity = '0';
-    site.classList.add('visible');
-    setTimeout(() => { stage.style.display = 'none'; }, 1300);
-    // Restore scroll
-    document.body.style.overflow = '';
-  }
-
-  skipBtn.addEventListener('click', endIntro);
-
-  document.body.style.overflow = 'hidden';
-  raf = requestAnimationFrame(loop);
-
-  // ── NAVBAR scroll ──
-  const nav = document.getElementById('navbar');
-  window.addEventListener('scroll', () => {
-    nav.classList.toggle('scrolled', window.scrollY > 40);
+  window.addEventListener('mousemove', e => {
+    mouse.x = (e.clientX / innerWidth  - .5) * 2;
+    mouse.y = (e.clientY / innerHeight - .5) * 2;
   }, { passive: true });
 
+  // ── Scroll parallax ──
+  let scrollY = 0;
+  window.addEventListener('scroll', () => { scrollY = window.scrollY; }, { passive: true });
+
+  // ── Resize ──
+  window.addEventListener('resize', () => {
+    camera.aspect = innerWidth / innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(innerWidth, innerHeight);
+  });
+
+  // ── Animate ──
+  let lineTimer = 0;
+  let frame = 0;
+
+  function animate() {
+    requestAnimationFrame(animate);
+    frame++;
+
+    // Smooth mouse follow — cámara se mueve sutilmente
+    target.x += (mouse.x * 18 - target.x) * .04;
+    target.y += (-mouse.y * 12 - target.y) * .04;
+    camera.position.x += (target.x - camera.position.x) * .06;
+    camera.position.y += (target.y - camera.position.y) * .06;
+    camera.position.y -= scrollY * .04;
+    camera.lookAt(scene.position);
+
+    // Mover nodos
+    const pos = nodeGeo.attributes.position.array;
+    for (let i = 0; i < nodeCount; i++) {
+      pos[i*3]   += nodeVel[i].x;
+      pos[i*3+1] += nodeVel[i].y;
+      pos[i*3+2] += nodeVel[i].z;
+      // Bounce en los bordes
+      if (Math.abs(pos[i*3])   > 450) nodeVel[i].x *= -1;
+      if (Math.abs(pos[i*3+1]) > 300) nodeVel[i].y *= -1;
+      if (Math.abs(pos[i*3+2]) > 100) nodeVel[i].z *= -1;
+    }
+    nodeGeo.attributes.position.needsUpdate = true;
+
+    // Reconstruir líneas cada 3 frames (performance)
+    lineTimer++;
+    if (lineTimer % 3 === 0) buildLines();
+
+    // Rotación suave de estrellas
+    scene.rotation.y = frame * .00015;
+    scene.rotation.x = frame * .00008;
+
+    renderer.render(scene, camera);
+  }
+
+  animate();
 })();
+
+// ── Navbar scroll ──
+const nav = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 40);
+}, { passive: true });
 </script>
+
 </body>
 </html>
