@@ -1,1 +1,701 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>STEPS — Ecosistema</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0D0D0D;--gold:#E8A020;
+  --white:#F0EFED;--muted:#888780;--border:#1E1C18;
+  --green:#2ECC8A;--blue:#5BB8F6;--purple:#9B7FE8;
+  --font-d:'Bebas Neue',sans-serif;--font-b:'Inter',sans-serif;
+}
+html,body{background:var(--bg);color:var(--white);font-family:var(--font-b);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+/* ══ SECCIÓN ECOSISTEMA ══ */
+#ecosistema{
+  position:relative;padding:8rem 4rem 6rem;
+  border-top:1px solid var(--border);
+  overflow:hidden;
+}
+
+/* Canvas de partículas de transición PLATAFORMA → ECOSISTEMA */
+#transition-canvas{
+  position:fixed;inset:0;
+  pointer-events:none;z-index:999;
+  opacity:0;transition:opacity .3s;
+}
+#transition-canvas.active{opacity:1}
+
+/* Título ECOSISTEMA */
+.eco-title-wrap{
+  text-align:center;margin-bottom:5rem;
+  position:relative;z-index:2;
+}
+#eco-word{
+  font-family:var(--font-d);
+  font-size:clamp(3rem,7vw,6.5rem);
+  letter-spacing:.08em;
+  display:inline-block;
+  /* Mismo gradiente que PLATAFORMA */
+  background:linear-gradient(160deg,
+    #7A3800 0%,#C06000 12%,#E8900A 24%,
+    #FFD060 38%,#FFF4C0 46%,#FFBA30 54%,
+    #E8900A 66%,#B85500 80%,#6A2E00 100%
+  );
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:drop-shadow(2px 3px 0px rgba(80,30,0,.7)) drop-shadow(0 0 28px rgba(220,120,0,.45));
+  opacity:0;transform:translateY(20px);
+  transition:opacity .8s ease, transform .8s ease;
+}
+#eco-word.visible{opacity:1;transform:none}
+
+/* ══ GRID DE DIVISIONES ══ */
+.div-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1.5rem;
+  position:relative;z-index:2;
+}
+
+/* Card base — glass flotante */
+.div-card{
+  position:relative;
+  border-radius:6px;
+  border:1px solid rgba(255,255,255,.08);
+  overflow:hidden;
+  min-height:420px;
+  display:flex;flex-direction:column;
+  transition:transform .4s cubic-bezier(.22,1,.36,1), box-shadow .4s;
+  cursor:default;
+}
+.div-card:hover{
+  transform:translateY(-6px);
+}
+
+/* Canvas de fondo por card */
+.card-canvas{
+  position:absolute;inset:0;width:100%;height:100%;
+  z-index:0;
+}
+
+/* Glass overlay */
+.card-glass{
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.06) 0%,rgba(255,255,255,.01) 50%,rgba(0,0,0,.2) 100%);
+  z-index:1;pointer-events:none;
+}
+/* Borde glass superior */
+.card-glass::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);
+}
+
+/* Contenido card */
+.card-body{
+  position:relative;z-index:2;
+  padding:2.2rem 2rem 2rem;
+  display:flex;flex-direction:column;gap:.5rem;
+  margin-top:auto;
+  background:linear-gradient(to top,rgba(0,0,0,.85) 0%,rgba(0,0,0,.4) 60%,transparent 100%);
+}
+.card-label{
+  font-size:.65rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
+  margin-bottom:.2rem;
+}
+.card-label.orange{color:var(--gold)}
+.card-label.green{color:var(--green)}
+.card-label.blue{color:var(--blue)}
+
+.card-title{
+  font-family:var(--font-d);font-size:2rem;letter-spacing:.06em;
+  color:var(--white);line-height:1;
+}
+.card-desc{
+  font-size:.82rem;font-weight:300;color:rgba(240,239,237,.65);
+  line-height:1.7;margin-top:.4rem;max-width:32ch;
+}
+.card-arrow{
+  margin-top:1rem;font-size:.72rem;font-weight:500;letter-spacing:.1em;
+  text-transform:uppercase;display:flex;align-items:center;gap:.5rem;
+  opacity:.5;transition:opacity .2s;
+}
+.div-card:hover .card-arrow{opacity:1}
+
+/* ══ COLORES HOVER por card ══ */
+.card-supply:hover{box-shadow:0 20px 60px rgba(232,160,32,.15), 0 0 0 1px rgba(232,160,32,.2)}
+.card-build:hover{box-shadow:0 20px 60px rgba(46,204,138,.12), 0 0 0 1px rgba(46,204,138,.2)}
+.card-tech:hover{box-shadow:0 20px 60px rgba(91,184,246,.12), 0 0 0 1px rgba(91,184,246,.2)}
+
+@media(max-width:900px){
+  #ecosistema{padding:5rem 1.5rem 4rem}
+  .div-grid{grid-template-columns:1fr;gap:1rem}
+  .div-card{min-height:320px}
+}
+</style>
+</head>
+<body>
+
+<canvas id="transition-canvas"></canvas>
+
+<section id="ecosistema">
+  <div class="eco-title-wrap">
+    <span id="eco-word">ECOSISTEMA</span>
+  </div>
+
+  <div class="div-grid">
+
+    <!-- 01 SUPPLY CHAIN -->
+    <div class="div-card card-supply">
+      <canvas class="card-canvas" id="canvas-supply"></canvas>
+      <div class="card-glass"></div>
+      <div class="card-body">
+        <div class="card-label orange">Supply Chain</div>
+        <div class="card-title">STEPS SUPPLY</div>
+        <p class="card-desc">Gestión integral de compras. Un espacio, todo lo que necesitás.</p>
+        <div class="card-arrow" style="color:var(--gold)">Ver catálogo <span>→</span></div>
+      </div>
+    </div>
+
+    <!-- 02 ESPACIOS & DISEÑO -->
+    <div class="div-card card-build">
+      <canvas class="card-canvas" id="canvas-build"></canvas>
+      <div class="card-glass"></div>
+      <div class="card-body">
+        <div class="card-label green">Espacios & Diseño</div>
+        <div class="card-title">STEPS BUILD</div>
+        <p class="card-desc">Remodelación y diseño de espacios para empresas y hogares.</p>
+        <div class="card-arrow" style="color:var(--green)">Ver proyectos <span>→</span></div>
+      </div>
+    </div>
+
+    <!-- 03 TECNOLOGÍA & LABS -->
+    <div class="div-card card-tech" id="card-tech">
+      <canvas class="card-canvas" id="canvas-tech"></canvas>
+      <div class="card-glass"></div>
+      <div class="card-body">
+        <div class="card-label blue">Tecnología & Labs</div>
+        <div class="card-title">STEPS TECH</div>
+        <p class="card-desc">Ecosistemas digitales y apps de gestión + IA.</p>
+        <div class="card-arrow" style="color:var(--blue)">Ver soluciones <span>→</span></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<script>
+// ══════════════════════════════════════════════════════
+//  UTILIDADES
+// ══════════════════════════════════════════════════════
+function lerp(a,b,t){return a+(b-a)*t}
+function easeOut(t){return 1-Math.pow(1-t,3)}
+function easeInOut(t){return t<.5?2*t*t:-1+(4-2*t)*t}
+
+// ══════════════════════════════════════════════════════
+//  1. SUPPLY — Red neuronal naranja
+// ══════════════════════════════════════════════════════
+(function(){
+  const c=document.getElementById('canvas-supply');
+  const ctx=c.getContext('2d');
+  let W,H;
+
+  function resize(){
+    const r=c.parentElement.getBoundingClientRect();
+    W=c.width=r.width; H=c.height=r.height;
+    buildNodes();
+  }
+
+  const NODES=[];
+  const NODE_COUNT=22;
+  const CONNECTIONS=[];
+
+  function buildNodes(){
+    NODES.length=0; CONNECTIONS.length=0;
+    for(let i=0;i<NODE_COUNT;i++){
+      NODES.push({
+        x:Math.random()*W, y:Math.random()*H,
+        vx:(Math.random()-.5)*.25, vy:(Math.random()-.5)*.2,
+        r:2+Math.random()*2.5,
+        pulse:Math.random()*Math.PI*2,
+        pulseSpeed:.4+Math.random()*.6,
+        glow:0,
+      });
+    }
+    // Conexiones fijas entre nodos cercanos
+    for(let i=0;i<NODE_COUNT;i++){
+      for(let j=i+1;j<NODE_COUNT;j++){
+        const dx=NODES[i].x-NODES[j].x;
+        const dy=NODES[i].y-NODES[j].y;
+        if(Math.sqrt(dx*dx+dy*dy)<W*.35){
+          CONNECTIONS.push({a:i,b:j,pulses:[]});
+        }
+      }
+    }
+  }
+
+  // Pulsos de luz viajando por las conexiones
+  let pulseTimer=0;
+  function spawnPulse(){
+    if(CONNECTIONS.length===0)return;
+    const conn=CONNECTIONS[Math.floor(Math.random()*CONNECTIONS.length)];
+    conn.pulses.push({t:0,speed:.006+Math.random()*.008,dir:Math.random()>.5?1:-1});
+  }
+
+  let t=0;
+  function draw(){
+    requestAnimationFrame(draw);
+    t+=.016;
+    ctx.clearRect(0,0,W,H);
+
+    // Fondo muy oscuro naranja
+    ctx.fillStyle='rgba(15,8,2,1)';
+    ctx.fillRect(0,0,W,H);
+
+    // Nebulosa naranja de fondo
+    const grad=ctx.createRadialGradient(W*.5,H*.6,0,W*.5,H*.6,W*.6);
+    grad.addColorStop(0,'rgba(120,50,0,.18)');
+    grad.addColorStop(.5,'rgba(60,25,0,.08)');
+    grad.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=grad; ctx.fillRect(0,0,W,H);
+
+    // Mover nodos
+    NODES.forEach(n=>{
+      n.x+=n.vx; n.y+=n.vy;
+      if(n.x<0||n.x>W)n.vx*=-1;
+      if(n.y<0||n.y>H)n.vy*=-1;
+      n.pulse+=n.pulseSpeed*.016;
+      n.glow=Math.max(0,n.glow-.02);
+    });
+
+    // Spawn pulsos
+    pulseTimer+=t*.01;
+    if(pulseTimer>(.8+Math.random()*.5)){pulseTimer=0;spawnPulse();}
+
+    // Dibujar conexiones
+    CONNECTIONS.forEach(conn=>{
+      const na=NODES[conn.a], nb=NODES[conn.b];
+      const dx=nb.x-na.x, dy=nb.y-na.y;
+      const dist=Math.sqrt(dx*dx+dy*dy);
+      const alpha=Math.max(0,1-dist/(W*.35));
+
+      // Línea base
+      ctx.save();
+      ctx.globalAlpha=alpha*.12;
+      ctx.strokeStyle='rgba(232,140,20,1)';
+      ctx.lineWidth=.8;
+      ctx.beginPath(); ctx.moveTo(na.x,na.y); ctx.lineTo(nb.x,nb.y); ctx.stroke();
+      ctx.restore();
+
+      // Pulsos viajando
+      conn.pulses=conn.pulses.filter(p=>{
+        p.t+=p.speed;
+        if(p.t>1)return false;
+        const px=na.x+(nb.x-na.x)*p.t;
+        const py=na.y+(nb.y-na.y)*p.t;
+        const pAlpha=Math.sin(p.t*Math.PI)*alpha;
+
+        // Glow del pulso
+        const pg=ctx.createRadialGradient(px,py,0,px,py,12);
+        pg.addColorStop(0,`rgba(255,200,60,${pAlpha*.9})`);
+        pg.addColorStop(.4,`rgba(232,140,20,${pAlpha*.4})`);
+        pg.addColorStop(1,'rgba(0,0,0,0)');
+        ctx.save();
+        ctx.fillStyle=pg;
+        ctx.beginPath(); ctx.arc(px,py,12,0,Math.PI*2); ctx.fill();
+        ctx.restore();
+
+        // Al llegar, iluminar el nodo destino
+        if(p.t>.9){
+          const destNode=p.dir>0?NODES[conn.b]:NODES[conn.a];
+          destNode.glow=Math.min(1,destNode.glow+.8);
+        }
+        return true;
+      });
+    });
+
+    // Dibujar nodos
+    NODES.forEach(n=>{
+      const twinkle=.4+.6*Math.sin(n.pulse);
+      const totalGlow=twinkle*.3+n.glow*.7;
+
+      // Halo cuando hay glow
+      if(totalGlow>.1){
+        const halo=ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,n.r*6);
+        halo.addColorStop(0,`rgba(255,180,40,${totalGlow*.5})`);
+        halo.addColorStop(.5,`rgba(232,120,10,${totalGlow*.2})`);
+        halo.addColorStop(1,'rgba(0,0,0,0)');
+        ctx.save(); ctx.fillStyle=halo;
+        ctx.beginPath(); ctx.arc(n.x,n.y,n.r*6,0,Math.PI*2); ctx.fill(); ctx.restore();
+      }
+
+      // Core del nodo
+      ctx.save();
+      ctx.globalAlpha=.5+totalGlow*.5;
+      ctx.shadowColor='rgba(255,180,40,1)';
+      ctx.shadowBlur=8+totalGlow*16;
+      ctx.fillStyle=`hsl(35,${80+totalGlow*20}%,${45+totalGlow*30}%)`;
+      ctx.beginPath(); ctx.arc(n.x,n.y,n.r,0,Math.PI*2); ctx.fill();
+      ctx.restore();
+    });
+  }
+
+  resize();
+  new ResizeObserver(resize).observe(c.parentElement);
+  draw();
+})();
+
+// ══════════════════════════════════════════════════════
+//  2. BUILD — Planos arquitectónicos animados
+// ══════════════════════════════════════════════════════
+(function(){
+  const c=document.getElementById('canvas-build');
+  const ctx=c.getContext('2d');
+  let W,H;
+
+  function resize(){
+    const r=c.parentElement.getBoundingClientRect();
+    W=c.width=r.width; H=c.height=r.height;
+  }
+
+  // Líneas de plano arquitectónico
+  const LINES=[];
+  const SHAPES=[];
+
+  function buildScene(){
+    LINES.length=0; SHAPES.length=0;
+    // Líneas de cuadrícula
+    const gridSpacing=40;
+    for(let x=0;x<W+gridSpacing;x+=gridSpacing){
+      LINES.push({x1:x,y1:0,x2:x,y2:H,type:'grid',speed:(Math.random()-.5)*.15,offset:Math.random()*100});
+    }
+    for(let y=0;y<H+gridSpacing;y+=gridSpacing){
+      LINES.push({x1:0,y1:y,x2:W,y2:y,type:'grid',speed:(Math.random()-.5)*.1,offset:Math.random()*100});
+    }
+    // Formas arquitectónicas (rectángulos de plano)
+    for(let i=0;i<8;i++){
+      SHAPES.push({
+        x:Math.random()*W*.7+W*.1,
+        y:Math.random()*H*.7+H*.1,
+        w:40+Math.random()*120,
+        h:30+Math.random()*80,
+        vx:(Math.random()-.5)*.12,
+        vy:(Math.random()-.5)*.08,
+        rot:Math.random()*Math.PI*.5,
+        vrot:(Math.random()-.5)*.001,
+        alpha:.3+Math.random()*.4,
+        type:Math.floor(Math.random()*3), // 0=rect 1=L-shape 2=cross
+      });
+    }
+  }
+
+  let t=0;
+  function draw(){
+    requestAnimationFrame(draw);
+    t+=.008;
+    ctx.clearRect(0,0,W,H);
+
+    // Fondo oscuro verde muy sutil
+    ctx.fillStyle='rgba(4,12,8,1)';
+    ctx.fillRect(0,0,W,H);
+
+    // Nebulosa verde
+    const grad=ctx.createRadialGradient(W*.4,H*.4,0,W*.4,H*.4,W*.55);
+    grad.addColorStop(0,'rgba(10,60,35,.2)');
+    grad.addColorStop(.5,'rgba(5,30,18,.08)');
+    grad.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=grad; ctx.fillRect(0,0,W,H);
+
+    // Grid animada
+    LINES.forEach(l=>{
+      if(l.type==='grid'){
+        const pulse=.03+.04*Math.sin(t*.5+l.offset);
+        ctx.save();
+        ctx.globalAlpha=pulse;
+        ctx.strokeStyle='rgba(46,204,138,1)';
+        ctx.lineWidth=.5;
+        ctx.beginPath(); ctx.moveTo(l.x1,l.y1); ctx.lineTo(l.x2,l.y2); ctx.stroke();
+        ctx.restore();
+      }
+    });
+
+    // Formas arquitectónicas
+    SHAPES.forEach(s=>{
+      s.x+=s.vx; s.y+=s.vy; s.rot+=s.vrot;
+      if(s.x<-s.w)s.x=W+s.w; if(s.x>W+s.w)s.x=-s.w;
+      if(s.y<-s.h)s.y=H+s.h; if(s.y>H+s.h)s.y=-s.h;
+
+      ctx.save();
+      ctx.translate(s.x,s.y);
+      ctx.rotate(s.rot);
+      ctx.globalAlpha=s.alpha*(.5+.5*Math.sin(t*.4+s.x*.01));
+      ctx.strokeStyle='rgba(46,204,138,1)';
+      ctx.lineWidth=1;
+
+      if(s.type===0){
+        ctx.strokeRect(-s.w/2,-s.h/2,s.w,s.h);
+        // División interna
+        ctx.beginPath(); ctx.moveTo(-s.w/2,0); ctx.lineTo(s.w/2,0); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(0,-s.h/2); ctx.lineTo(0,s.h/2); ctx.stroke();
+      } else if(s.type===1){
+        // L-shape
+        ctx.beginPath();
+        ctx.moveTo(-s.w/2,-s.h/2);
+        ctx.lineTo(-s.w/2,s.h/2);
+        ctx.lineTo(s.w*.1,s.h/2);
+        ctx.lineTo(s.w*.1,0);
+        ctx.lineTo(s.w/2,0);
+        ctx.lineTo(s.w/2,-s.h/2);
+        ctx.closePath(); ctx.stroke();
+      } else {
+        // Cruz
+        ctx.strokeRect(-s.w/6,-s.h/2,s.w/3,s.h);
+        ctx.strokeRect(-s.w/2,-s.h/6,s.w,s.h/3);
+      }
+
+      // Punto de esquina
+      ctx.fillStyle='rgba(46,204,138,.8)';
+      ctx.beginPath(); ctx.arc(-s.w/2,-s.h/2,2,0,Math.PI*2); ctx.fill();
+
+      // Dimensión (línea de cota)
+      ctx.globalAlpha=s.alpha*.4;
+      ctx.strokeStyle='rgba(46,204,138,.6)';
+      ctx.lineWidth=.5;
+      ctx.setLineDash([3,4]);
+      ctx.beginPath();
+      ctx.moveTo(-s.w/2,s.h/2+8); ctx.lineTo(s.w/2,s.h/2+8); ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.restore();
+    });
+
+    // Líneas de movimiento rápido (tránsito de datos)
+    if(Math.random()<.02){
+      const lx=Math.random()*W;
+      ctx.save();
+      ctx.globalAlpha=.4;
+      ctx.strokeStyle='rgba(100,255,180,.6)';
+      ctx.lineWidth=1;
+      ctx.shadowColor='rgba(46,204,138,1)';
+      ctx.shadowBlur=4;
+      ctx.beginPath();
+      ctx.moveTo(lx,0); ctx.lineTo(lx+20,H); ctx.stroke();
+      ctx.restore();
+    }
+  }
+
+  resize();
+  new ResizeObserver(resize).observe(c.parentElement);
+  buildScene();
+  draw();
+})();
+
+// ══════════════════════════════════════════════════════
+//  3. TECH — IA neuronal con mouse fluorescente
+// ══════════════════════════════════════════════════════
+(function(){
+  const c=document.getElementById('canvas-tech');
+  const ctx=c.getContext('2d');
+  const card=document.getElementById('card-tech');
+  let W,H,mouse={x:-999,y:-999};
+
+  function resize(){
+    const r=c.parentElement.getBoundingClientRect();
+    W=c.width=r.width; H=c.height=r.height;
+    buildNet();
+  }
+
+  // Red neuronal IA — estructura de cerebro artificial
+  const NET_NODES=[];
+  const NET_EDGES=[];
+  const LAYERS=[4,6,6,5,3]; // capas de la red neuronal
+
+  function buildNet(){
+    NET_NODES.length=0; NET_EDGES.length=0;
+    const layerCount=LAYERS.length;
+    LAYERS.forEach((count,li)=>{
+      const lx=(li/(layerCount-1))*(W*.75)+W*.12;
+      for(let ni=0;ni<count;ni++){
+        const ly=((ni+.5)/count)*H*.8+H*.1;
+        NET_NODES.push({
+          x:lx, y:ly,
+          layer:li, idx:ni,
+          glow:0, baseGlow:.05+Math.random()*.1,
+          pulse:Math.random()*Math.PI*2,
+          pulseSpeed:.3+Math.random()*.4,
+        });
+      }
+    });
+    // Conectar capas
+    let ni=0;
+    for(let li=0;li<LAYERS.length-1;li++){
+      const layerStart=LAYERS.slice(0,li).reduce((a,b)=>a+b,0);
+      const nextStart=layerStart+LAYERS[li];
+      for(let a=layerStart;a<layerStart+LAYERS[li];a++){
+        for(let b=nextStart;b<nextStart+LAYERS[li+1];b++){
+          NET_EDGES.push({a,b,pulse:null,lit:0});
+        }
+      }
+    }
+  }
+
+  // Mouse sobre la card
+  card.addEventListener('mousemove',e=>{
+    const r=c.getBoundingClientRect();
+    mouse.x=e.clientX-r.left;
+    mouse.y=e.clientY-r.top;
+  });
+  card.addEventListener('mouseleave',()=>{mouse.x=-999;mouse.y=-999;});
+
+  // Pulsos automáticos
+  let autoTimer=0;
+  function spawnAutoPulse(){
+    const firstLayer=NET_NODES.filter(n=>n.layer===0);
+    const startNode=firstLayer[Math.floor(Math.random()*firstLayer.length)];
+    if(!startNode)return;
+    // Propagar por las capas
+    propagate(NET_NODES.indexOf(startNode));
+  }
+
+  function propagate(nodeIdx,depth=0){
+    if(depth>LAYERS.length)return;
+    const node=NET_NODES[nodeIdx];
+    if(!node)return;
+    node.glow=1;
+    // Encontrar edges que salen de este nodo
+    NET_EDGES.forEach(e=>{
+      if(e.a===nodeIdx){
+        e.lit=1;
+        setTimeout(()=>propagate(e.b,depth+1),120+Math.random()*80);
+      }
+    });
+  }
+
+  let t=0;
+  function draw(){
+    requestAnimationFrame(draw);
+    t+=.016;
+
+    ctx.clearRect(0,0,W,H);
+
+    // Fondo oscuro azul-violeta
+    ctx.fillStyle='rgba(3,5,12,1)';
+    ctx.fillRect(0,0,W,H);
+
+    // Nebulosa tech
+    const grad=ctx.createRadialGradient(W*.5,H*.5,0,W*.5,H*.5,W*.6);
+    grad.addColorStop(0,'rgba(30,15,60,.2)');
+    grad.addColorStop(.4,'rgba(10,5,30,.1)');
+    grad.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=grad; ctx.fillRect(0,0,W,H);
+
+    // Distancia del mouse para efecto fluorescente
+    const hasMouseActive=mouse.x>0&&mouse.y>0;
+    const mouseRadius=120;
+
+    // Auto pulso
+    autoTimer+=t*.008;
+    if(autoTimer>1.5){autoTimer=0;spawnAutoPulse();}
+
+    // Dibujar edges
+    NET_EDGES.forEach(e=>{
+      const na=NET_NODES[e.a], nb=NET_NODES[e.b];
+      if(!na||!nb)return;
+
+      // Distancia del mouse a la línea
+      let mouseDist=999;
+      if(hasMouseActive){
+        // Punto más cercano en el segmento
+        const dx=nb.x-na.x, dy=nb.y-na.y;
+        const len2=dx*dx+dy*dy;
+        let tt=((mouse.x-na.x)*dx+(mouse.y-na.y)*dy)/len2;
+        tt=Math.max(0,Math.min(1,tt));
+        const cx2=na.x+tt*dx, cy2=na.y+tt*dy;
+        const ddx=mouse.x-cx2, ddy=mouse.y-cy2;
+        mouseDist=Math.sqrt(ddx*ddx+ddy*ddy);
+      }
+
+      const mouseInfluence=hasMouseActive?Math.max(0,1-mouseDist/mouseRadius):0;
+      const litAlpha=e.lit*.5;
+      const baseAlpha=.08;
+      const totalAlpha=baseAlpha+litAlpha+mouseInfluence*.7;
+
+      // Color: azul base → celeste con mouse → violeta con activación
+      const r=Math.floor(lerp(40,150,mouseInfluence)+e.lit*60);
+      const g=Math.floor(lerp(50,200,mouseInfluence*0.5)+e.lit*20);
+      const b=Math.floor(lerp(120,255,mouseInfluence*.8)+e.lit*40);
+
+      ctx.save();
+      ctx.globalAlpha=totalAlpha;
+      if(mouseInfluence>.1){
+        ctx.shadowColor=`rgb(${r},${g},${b})`;
+        ctx.shadowBlur=6+mouseInfluence*12;
+      }
+      ctx.strokeStyle=`rgb(${r},${g},${b})`;
+      ctx.lineWidth=.8+mouseInfluence*1.5+e.lit*.5;
+      ctx.beginPath(); ctx.moveTo(na.x,na.y); ctx.lineTo(nb.x,nb.y); ctx.stroke();
+      ctx.restore();
+
+      // Decay
+      e.lit=Math.max(0,e.lit-.025);
+    });
+
+    // Dibujar nodos
+    NET_NODES.forEach(n=>{
+      n.pulse+=n.pulseSpeed*.016;
+      n.glow=Math.max(n.baseGlow,n.glow-.018);
+
+      const dx=mouse.x-n.x, dy=mouse.y-n.y;
+      const mDist=Math.sqrt(dx*dx+dy*dy);
+      const mouseInfluence=hasMouseActive?Math.max(0,1-mDist/mouseRadius):0;
+
+      const totalGlow=n.glow+mouseInfluence*.8;
+      const pulse=.5+.5*Math.sin(n.pulse);
+
+      // Halo fluorescente con mouse
+      if(mouseInfluence>.05||n.glow>.2){
+        const halo=ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,18+mouseInfluence*20);
+        halo.addColorStop(0,`rgba(${100+mouseInfluence*155},${160+mouseInfluence*90},${255},${totalGlow*.6})`);
+        halo.addColorStop(.5,`rgba(80,120,220,${totalGlow*.2})`);
+        halo.addColorStop(1,'rgba(0,0,0,0)');
+        ctx.save();
+        ctx.fillStyle=halo;
+        ctx.beginPath(); ctx.arc(n.x,n.y,18+mouseInfluence*20,0,Math.PI*2); ctx.fill();
+        ctx.restore();
+      }
+
+      // Core
+      ctx.save();
+      ctx.shadowColor=`rgba(${100+mouseInfluence*155},180,255,1)`;
+      ctx.shadowBlur=4+totalGlow*12;
+      ctx.globalAlpha=.4+totalGlow*.6;
+      ctx.fillStyle=`hsl(${220+mouseInfluence*40},${70+mouseInfluence*30}%,${50+totalGlow*30}%)`;
+      ctx.beginPath(); ctx.arc(n.x,n.y,2+totalGlow*2,0,Math.PI*2); ctx.fill();
+      ctx.restore();
+    });
+  }
+
+  resize();
+  new ResizeObserver(resize).observe(c.parentElement);
+  draw();
+})();
+
+// ══════════════════════════════════════════════════════
+//  ANIMACIÓN DEL TÍTULO ECOSISTEMA al entrar en view
+// ══════════════════════════════════════════════════════
+(function(){
+  const word=document.getElementById('eco-word');
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){word.classList.add('visible');obs.disconnect();}
+    });
+  },{threshold:.3});
+  obs.observe(word);
+})();
+</script>
+</body>
+</html>
 
